@@ -7,7 +7,8 @@ import (
 )
 
 type Board struct {
-	Squares [8][8]pieces.Piece
+	Squares   [8][8]pieces.Piece `json:"Squares"`
+	MoveCount int                `json:"move_count"`
 }
 
 type Coordinate struct {
@@ -17,6 +18,7 @@ type Coordinate struct {
 
 func (b Board) MovePiece(start, end Coordinate) (Board, error) {
 	piece, err := b.getPiece(start)
+	b.MoveCount += 1
 	if err != nil {
 		return b, err
 	}
@@ -119,6 +121,7 @@ func (b Board) getPiece(coord Coordinate) (pieces.Piece, error) {
 
 func CreateDefaultBoard() Board {
 	var board Board
+	board.MoveCount = 1
 
 	// Pawns
 	for file := 0; file < 8; file++ {

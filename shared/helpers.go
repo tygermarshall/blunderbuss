@@ -1,30 +1,12 @@
-package main
+package shared
 
 import (
 	"fmt"
 	"github.com/tygermarshall/blunderbuss/shared/board"
 	"github.com/tygermarshall/blunderbuss/shared/pieces"
+	"log"
 	"strings"
 )
-
-func printBoard(b *board.Board) {
-	for rank := 7; rank >= 0; rank-- {
-		for file := 0; file < 8; file++ {
-			p := b.Squares[rank][file]
-			if p.Type == pieces.Empty {
-				fmt.Print(". ")
-				continue
-			}
-
-			c := p.Type.String()[0]
-			if p.Team == pieces.Black {
-				c = byte(strings.ToLower(string(c))[0])
-			}
-			fmt.Printf("%c ", c)
-		}
-		fmt.Println()
-	}
-}
 
 const (
 	reset = "\033[0m"
@@ -35,6 +17,32 @@ const (
 	fgWhite = "\033[38;5;231m"
 	fgBlack = "\033[38;5;16m"
 )
+
+func CreatePrettyPrint(b board.Board, output *strings.Builder) {
+	for rank := 0; rank <= 7; rank++ {
+
+		for file := 0; file < 8; file++ {
+			p := b.Squares[rank][file]
+
+			bg := squareColor(rank, file)
+			output.WriteString(bg)
+
+			if p.Type == pieces.Empty {
+				output.WriteString("  ")
+			} else {
+				fg := fgWhite
+				if p.Team == pieces.Black {
+					fg = fgBlack
+				}
+
+				output.WriteString(fg + pieceRune(p) + " ")
+			}
+
+			output.WriteString(reset)
+		}
+		output.WriteString("\n")
+	}
+}
 
 func PrettyPrint(b board.Board) {
 	for rank := 0; rank <= 7; rank++ {
@@ -105,4 +113,41 @@ func pieceRune(p pieces.Piece) string {
 	}
 
 	return "?"
+}
+
+func LogBoard(b *board.Board) {
+	for rank := 7; rank >= 0; rank-- {
+		for file := 0; file < 8; file++ {
+			p := b.Squares[rank][file]
+			if p.Type == pieces.Empty {
+				log.Print(". ")
+				continue
+			}
+
+			c := p.Type.String()[0]
+			if p.Team == pieces.Black {
+				c = byte(strings.ToLower(string(c))[0])
+			}
+			log.Printf("%c ", c)
+		}
+		log.Println()
+	}
+}
+func PrintBoard(b *board.Board) {
+	for rank := 7; rank >= 0; rank-- {
+		for file := 0; file < 8; file++ {
+			p := b.Squares[rank][file]
+			if p.Type == pieces.Empty {
+				fmt.Print(". ")
+				continue
+			}
+
+			c := p.Type.String()[0]
+			if p.Team == pieces.Black {
+				c = byte(strings.ToLower(string(c))[0])
+			}
+			fmt.Printf("%c ", c)
+		}
+		fmt.Println()
+	}
 }

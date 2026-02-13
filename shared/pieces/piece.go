@@ -53,7 +53,7 @@ const (
 )
 
 type Piece struct {
-	Type      PieceType
-	Team      Team
-	MoveCount int
+	Type      PieceType `json:"type"`
+	Team      Team      `json:"team"`
+	MoveCount int       `json:"move_count"`
 }
